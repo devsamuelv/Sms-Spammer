@@ -3,11 +3,14 @@
     <string name="btn">Spam</string>
     <string name="num">Phone Number</string>
     <string name="numberOutput">Messages Sent</string>
+    <string name="howmannymsgs">Messages To Send: </string>
+    <string name="choose">Choose!</string>
     <string name="out">Output</string>
     <string name="msg">Put The Message Here</string>
     <string name="setup">Problems? Reset Settings</string>
     <string name="sentMsg">Number Of Sent Messages</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="imgbtn">Image Spamming</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

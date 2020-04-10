@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -24,17 +25,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
-    public int SMS_PERMISION_CODE = 1;
-    public int SPLASH_DELAY = 3000;
+    private int SMS_PERMISION_CODE = 1;
 
     public SmsManager smsManager = SmsManager.getDefault();
-    public ContactsContract contactsContract = null;
     public Button button = null;
     public TextView output = null;
     public TextView phone = null;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public TextView sentMsg = null;
     public EditText MESSAGE_TO_SEND = null;
     public ImageView githubRepo = null;
+    public TextView chooseMsgNum = null;
 
     public String RECEVING_NUMBER = "";
 
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         setup = findViewById(R.id.setup);
         sentMsg = findViewById(R.id.sentMsg);
         githubRepo = findViewById(R.id.githubRepoLink);
+        chooseMsgNum = findViewById(R.id.nummsgbtn);
 
         MESSAGE_TO_SEND = findViewById(R.id.editText);
         
@@ -101,7 +106,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onLowMemory() {
-        Toast.makeText(this, "⛔Low On Memory⛔", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "⛔ Low On Memory ⛔", Toast.LENGTH_SHORT).show();
+    }
+
+    public void imageSpam() {
+        setRECEVING_NUMBER(phone.getText().toString());
+        setMessage();
     }
 
     public void Spam() {
@@ -118,7 +128,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        for (int i = 0; i < 100; i ++) {
+        // to check if the amount of messages
+        if (getMsgNumbers() > 500) {
+            Toast.makeText(this, "Please Enter a message amount lower than 500", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // sends the messages to the receiver.
+        for (int i = 0; i < getMsgNumbers(); i++) {
             try {
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
 
@@ -160,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.SEND_SMS}, SMS_PERMISION_CODE);
         }
+    }
+
+    private int getMsgNumbers() {
+        return Integer.parseInt(chooseMsgNum.getText().toString());
     }
 
     @Override
