@@ -1,3 +1,4 @@
+import 'package:SPAMMY_IOS/backend/messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -29,25 +30,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  TextEditingController controller1 = new TextEditingController();
-  TextEditingController controller2 = new TextEditingController();
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  TextEditingController phoneNumber = new TextEditingController();
+  TextEditingController messageContent = new TextEditingController();
+  TextEditingController numberOfMessages = new TextEditingController();
 
   // todo use twillo for 1000 msg's a sec
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(widget.title, style: TextStyle(fontSize: 25)),
       ),
-      body: Center(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -56,7 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
               child: CupertinoTextField(
                 placeholder: "Phone Number",
-                controller: controller1,
+                controller: phoneNumber,
+                padding: EdgeInsets.all(12),
                 onChanged: (value) => {if (null) {}},
               ),
             ),
@@ -64,15 +59,60 @@ class _MyHomePageState extends State<MyHomePage> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
               child: CupertinoTextField(
-                controller: controller2,
+                controller: messageContent,
                 placeholder: "Message Contents",
+                padding: EdgeInsets.all(12),
+                onChanged: (value) => {if (null) {}},
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 150.0, vertical: 15.0),
+              child: CupertinoTextField(
+                controller: numberOfMessages,
+                padding: EdgeInsets.all(10),
+                placeholder: "Amount of Messages",
                 onChanged: (value) => {if (null) {}},
               ),
             ),
             CupertinoButton(
               child: Text('Spam'),
               color: Colors.blue,
-              onPressed: () => {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => new CupertinoAlertDialog(
+                    title: Text('💥 Are You Sure? 💥'),
+                    content: Text('Address: ' +
+                        phoneNumber.text +
+                        "\n"
+                            'Amount: ' +
+                        numberOfMessages.text +
+                        "\n"
+                            'Message Content: ' +
+                        messageContent.text +
+                        "\n"),
+                    actions: <Widget>[
+                      CupertinoDialogAction(
+                        child:
+                            Text('Yes', style: TextStyle(color: Colors.green)),
+                        onPressed: () {
+                          Navigator.pop(context, 'Cancel');
+
+                          Spam(int.parse(numberOfMessages.text),
+                              phoneNumber.text, messageContent.text, context);
+                        },
+                      ),
+                      CupertinoDialogAction(
+                        child: Text('No', style: TextStyle(color: Colors.red)),
+                        onPressed: () {
+                          Navigator.pop(context, 'Cancel');
+                        },
+                      )
+                    ],
+                  ),
+                );
+              },
             )
           ],
         ),
